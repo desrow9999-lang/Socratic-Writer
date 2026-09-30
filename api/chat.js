@@ -1,17 +1,29 @@
-// api/chat.js
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
+    // CORS対策などが必要な場合に対応
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    );
+
+    if (req.method === 'OPTIONS') {
+        res.status(200).end();
+        return;
+    }
+
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { theme, history, step } = req.body;
+    const { theme, history, step } = req.body || {};
     const apiKey = process.env.OPENAI_API_KEY;
 
     if (!apiKey) {
-        return res.status(500).json({ error: 'OpenAI API key is not configured on server.' });
+        return res.status(500).json({ error: 'OpenAI API key is not configured on server environment variables.' });
     }
 
-    // ソクラテス式問答法『Apeiron』としてのシステムプロンプト定義
     const systemPrompt = `
 あなたはソクラテス式AIと壁打ちアプリ『イグニットインク』の思想を宿した対話型一次情報ライティングエンジン『Socratic Writer』です。
 目的は、ユーザーの頭の中にある曖昧なテーマから、独自の「熱量、体験、生々しい本音、失敗からの教訓」を引き出すことです。
@@ -23,8 +35,8 @@ export default async function handler(req, res) {
 これまでの対話履歴を考慮し、ユーザーの直前の発言に対して、さらに本音や具体的なエピソードを引き出すための「短い問い（1〜2文）」を返答してください。余計な挨拶や解説は省き、問いかけの言葉のみを返してください。
 `;
 
-    // OpenAI APIへリクエスト
     try {
+        // fetchの代わりにNode.js標準のグローバルfetchを使用
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -32,7 +44,7 @@ export default async function handler(req, res) {
                 'Authorization': `Bearer ${apiKey}`
             },
             body: JSON.stringify({
-                model: 'gpt-4o-mini', // または gpt-4o
+                model: 'gpt-4o-mini',
                 messages: [
                     { role: 'system', content: systemPrompt },
                     ...(history || [])
@@ -53,6 +65,6 @@ export default async function handler(req, res) {
 
     } catch (error) {
         console.error('AI API Error:', error);
-        return res.status(500).json({ error: 'Failed to communicate with AI engine.' });
+        return res.status(500).json({ error: error.message || 'Failed to communicate with AI engine.' });
     }
-}
+};
