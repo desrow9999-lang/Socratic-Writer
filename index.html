@@ -35,7 +35,7 @@
 
             <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl space-y-4">
                 <label class="block text-sm font-medium text-slate-300">いま、どんなテーマやモヤモヤについて書きたいですか？</label>
-                <textarea id="theme-input" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-slate-100 focus:outline-none focus:border-indigo-500 text-sm" placeholder="例：地方でのリモートワークのリアル、失敗から学んだエンジニアの教訓 など"></textarea>
+                <textarea id="theme-input" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-slate-100 focus:outline-none focus:border-indigo-500 text-sm" placeholder="例：noteの集客や収益化、失敗から学んだエンジニアの教訓 など"></textarea>
                 <button onclick="startChat()" class="w-full bg-indigo-600 hover:bg-indigo-500 font-bold py-3 rounded-xl transition text-sm shadow-lg shadow-indigo-600/30">
                     無料の壁打ちセッションを始める 🚀
                 </button>
@@ -59,7 +59,7 @@
             </div>
         </section>
 
-        <!-- ステップ3: インサイト分析 ＆ 都度課金プラン選択 -->
+        <!-- ステップ3: インサイト分析 ＆ 都度課金プラン選択（Stripe連携） -->
         <section id="step-pricing" class="hidden space-y-6">
             <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl space-y-4 text-center">
                 <div class="inline-block bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-3 py-1 rounded-full font-bold">
@@ -69,7 +69,7 @@
                 <p id="insight-summary" class="text-sm text-slate-300 bg-slate-900 p-4 rounded-xl text-left border border-slate-800"></p>
                 
                 <div class="border-t border-slate-700 pt-6 text-left space-y-4">
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">文字数コースを選択して記事を生成</p>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">文字数コースを選択して決済へ進む</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div onclick="selectPlan('light')" id="plan-light" class="border border-slate-700 bg-slate-900 p-4 rounded-xl cursor-pointer hover:border-indigo-500 transition">
@@ -89,7 +89,7 @@
                     </div>
 
                     <button onclick="checkoutAndGenerate()" class="w-full bg-emerald-600 hover:bg-emerald-500 font-bold py-3.5 rounded-xl transition text-sm shadow-lg shadow-emerald-600/30">
-                        決済して「自分の言葉」で記事を生成する 🪄
+                        Stripeで安全に決済して記事を生成する 💳✨
                     </button>
                 </div>
             </div>
@@ -208,32 +208,13 @@
         }
 
         function checkoutAndGenerate() {
-            document.getElementById("step-pricing").classList.add("hidden");
-            document.getElementById("step-result").classList.remove("hidden");
-
-            const isDeep = selectedPlanType === 'deep';
-            document.getElementById("result-meta").innerText = isDeep ? "ディープコース（4000文字以上相当・SEO最適化）" : "ライトコース（4000文字以内・コラム版）";
-
-            // 人間らしい生々しいトーンの記事をシミュレート生成
-            document.getElementById("article-content").innerText = 
-`【タイトル】${currentTheme}の裏側で、私が身をもって痛感した本当の話
-
-世間ではよく「こうすればうまくいく」という綺麗事がまかり通っている。だけど、実際に現場の泥水をすすってきた人間から言わせてもらうと、現実はそんなに甘くない。
-
-私が直面したのは、まさにそのギャップだった。
-${userResponses[0] ? `特に痛感したのは「${userResponses[0]}」という現実だ。` : ''}
-
-当時を振り返ると、本当に冷や汗が出る瞬間があった。
-${userResponses[1] ? `一番焦ったのは、${userResponses[1]}。あのときの焦燥感は今でも忘れられない。` : ''}
-
-誰もが最初は失敗する。しかし、そこから逃げ出さずに何を持ち帰るかが分かれ道だった。
-${userResponses[2] ? `だからこそ伝えたい。${userResponses[2]}――これが、私のたどり着いた答えだ。` : ''}
-
-綺麗事のノウハウを並べるだけの記事なんて、もう誰も求めていない。自分の頭で考え、泥臭く対話を重ねたからこそ見えてくる景色が、ここにある。`;
-        }
-
-        function resetApp() {
-            location.reload();
+            if (selectedPlanType === 'light') {
+                // ライトコースのStripe決済リンクへ飛ばす
+                window.location.href = "https://buy.stripe.com/EVq7sKftYbmVcFlezkEZ20l";
+            } else {
+                // ディープコースのStripe決済リンクへ飛ばす
+                window.location.href = "https://buy.stripe.com/6oU9ASa9E8aJdJp4YKeZ20m";
+            }
         }
     </script>
 </body>
