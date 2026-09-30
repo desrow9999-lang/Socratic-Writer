@@ -15,28 +15,49 @@
                 <span class="bg-indigo-600 text-white font-bold px-2.5 py-1 rounded-lg text-sm">SW</span>
                 <span class="font-bold text-lg tracking-tight">Socratic Writer <span class="text-xs text-indigo-400 font-normal">by イグニットインク</span></span>
             </div>
-            <div class="text-xs text-slate-400">
+            <div class="text-xs text-slate-400 hidden sm:block">
                 対話型一次情報ライティングエンジン
             </div>
         </div>
     </header>
 
     <!-- メインコンテンツ -->
-    <main class="max-w-3xl mx-auto px-4 py-8 flex-grow w-full">
+    <main class="max-w-3xl mx-auto px-4 py-8 flex-grow w-full space-y-8">
 
         <!-- ステップ1: テーマ入力画面 -->
         <section id="step-theme" class="space-y-6">
-            <div class="text-center space-y-3 py-6">
-                <h1 class="text-3xl font-extrabold tracking-tight">あなたの頭の中にある<span class="text-indigo-400">「熱量と体験」</span>を記事にする。</h1>
-                <p class="text-slate-400 text-sm max-w-lg mx-auto">
-                    単なるSEOのコピペ記事ではありません。ソクラテス式AIと壁打ちアプリ『イグニットインク』の対話エンジンが、あなたの生々しい本音を引き出し、体温の感じられる文章に昇華させます。
+            <div class="text-center space-y-4 py-6">
+                <div class="inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-xs px-3 py-1 rounded-full font-medium">
+                    <span>✨ 対話×AIが紡ぎ出す、生きた言葉のプラットフォーム</span>
+                </div>
+                <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight">あなたの頭の中にある<br><span class="text-indigo-400">「熱量と体験」</span>を記事にする。</h1>
+                <p class="text-slate-400 text-sm max-w-xl mx-auto leading-relaxed">
+                    単なるSEOのコピペ記事ではありません。ソクラテス式AI『Apeiron』と壁打ちアプリ『イグニットインク』の思想を宿した対話エンジンが、あなたの本音を引き出し、体温の感じられる文章に昇華させます。
                 </p>
+
+                <!-- 思想・背景を伝えるカッコいいリンクカード群 -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 max-w-lg mx-auto">
+                    <a href="https://note.com/agile_lemur2260/n/n5deca535824d" target="_blank" class="flex items-center p-3 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-indigo-500/50 rounded-xl transition text-left group">
+                        <div class="mr-3 text-indigo-400 font-bold text-lg">🏛️</div>
+                        <div>
+                            <div class="text-xs text-indigo-300 font-semibold group-hover:underline">ソクラテス式問答法</div>
+                            <div class="text-[11px] text-slate-400">『Apeiron』の哲学を読む</div>
+                        </div>
+                    </a>
+                    <a href="https://note.com/agile_lemur2260/n/ne686ed14f925" target="_blank" class="flex items-center p-3 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-indigo-500/50 rounded-xl transition text-left group">
+                        <div class="mr-3 text-purple-400 font-bold text-lg">💡</div>
+                        <div>
+                            <div class="text-xs text-purple-300 font-semibold group-hover:underline">壁打ちAIアプリ</div>
+                            <div class="text-[11px] text-slate-400">『イグニットインク』の全貌</div>
+                        </div>
+                    </a>
+                </div>
             </div>
 
             <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl space-y-4">
                 <label class="block text-sm font-medium text-slate-300">いま、どんなテーマやモヤモヤについて書きたいですか？</label>
                 <textarea id="theme-input" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-slate-100 focus:outline-none focus:border-indigo-500 text-sm" placeholder="例：noteの集客や収益化、失敗から学んだエンジニアの教訓 など"></textarea>
-                <button onclick="startChat()" class="w-full bg-indigo-600 hover:bg-indigo-500 font-bold py-3 rounded-xl transition text-sm shadow-lg shadow-indigo-600/30">
+                <button onclick="startChat()" class="w-full bg-indigo-600 hover:bg-indigo-500 font-bold py-3.5 rounded-xl transition text-sm shadow-lg shadow-indigo-600/30">
                     無料の壁打ちセッションを始める 🚀
                 </button>
             </div>
@@ -45,7 +66,7 @@
         <!-- ステップ2: ソクラテス式チャット対話画面 -->
         <section id="step-chat" class="hidden space-y-4">
             <div class="bg-indigo-950/40 border border-indigo-900/50 p-4 rounded-xl text-xs text-indigo-300 flex justify-between items-center">
-                <span>💬 ソクラテス式対話セッション中（イグニットインク・エンジン）</span>
+                <span>💬 ソクラテス式対話セッション中（Apeiron × イグニットインク）</span>
                 <span id="chat-progress" class="font-bold">1 / 3 往復</span>
             </div>
 
@@ -111,15 +132,22 @@
                 </div>
             </div>
 
-            <!-- PR導線エリア：イグニットインクへのクロスプロモーション -->
-            <div class="bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-700/50 rounded-2xl p-6 text-center space-y-3">
-                <h3 class="font-bold text-base">この「思考の壁打ち」をもっと日常に。</h3>
-                <p class="text-xs text-slate-300 max-w-md mx-auto">
-                    今回体験したソクラテス式対話エンジンを搭載した元祖・壁打ちアプリ『イグニットインク』では、日々のアイデア出しやキャリアの悩みを深く掘り下げることができます。
-                </p>
-                <a href="#" onclick="alert('『イグニットインク』の公式サイトへ移動します（モック）'); return false;" class="inline-block bg-white text-indigo-950 font-bold px-6 py-2.5 rounded-xl text-xs hover:bg-slate-200 transition">
-                    『イグニットインク』を試してみる（無料） 🔥
-                </a>
+            <!-- PR導線エリア：Apeiron ＆ イグニットインクへのクロスプロモーション -->
+            <div class="bg-gradient-to-r from-indigo-950 to-purple-950 border border-indigo-800/60 rounded-2xl p-6 text-center space-y-4 shadow-xl">
+                <div class="space-y-1">
+                    <h3 class="font-bold text-base text-indigo-200">この「思考の壁打ち」をもっと深く日常に。</h3>
+                    <p class="text-xs text-slate-300 max-w-lg mx-auto leading-relaxed">
+                        今回体験したソクラテス式対話エンジンを支える哲学とアプリの世界を、さらに深く覗いてみませんか？
+                    </p>
+                </div>
+                <div class="flex flex-col sm:flex-row justify-center gap-3 pt-2">
+                    <a href="https://note.com/agile_lemur2260/n/n5deca535824d" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-indigo-300 font-semibold px-4 py-2.5 rounded-xl text-xs border border-indigo-500/30 transition">
+                        🏛️ ソクラテス式問答法『Apeiron』を読む
+                    </a>
+                    <a href="https://note.com/agile_lemur2260/n/ne686ed14f925" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-purple-300 font-semibold px-4 py-2.5 rounded-xl text-xs border border-purple-500/30 transition">
+                        💡 壁打ちAI『イグニットインク』を読む
+                    </a>
+                </div>
             </div>
         </section>
 
@@ -127,7 +155,7 @@
 
     <!-- フッター -->
     <footer class="text-center py-6 text-xs text-slate-500 border-t border-slate-800 mt-auto">
-        &copy; 2026 Socratic Writer & Ignite Ink Project. All rights reserved.
+        &copy; 2026 Socratic Writer & Apeiron / Ignite Ink Project. All rights reserved.
     </footer>
 
     <!-- JavaScriptロジック -->
@@ -215,6 +243,10 @@
                 // ディープコースのStripe決済リンクへ飛ばす
                 window.location.href = "https://buy.stripe.com/6oU9ASa9E8aJdJp4YKeZ20m";
             }
+        }
+
+        function resetApp() {
+            location.reload();
         }
     </script>
 </body>
