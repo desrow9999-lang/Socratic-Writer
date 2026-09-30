@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socratic Writer - 思考を引き出すAI記事代行プラットフォーム</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- ヘッダー -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <span class="bg-indigo-600 text-white font-bold px-2.5 py-1 rounded-lg text-sm">SW</span>
+                <span class="font-bold text-lg tracking-tight">Socratic Writer <span class="text-xs text-indigo-400 font-normal">by イグニットインク</span></span>
+            </div>
+            <div class="text-xs text-slate-400">
+                対話型一次情報ライティングエンジン
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="max-w-3xl mx-auto px-4 py-8 flex-grow w-full">
+
+        <!-- ステップ1: テーマ入力画面 -->
+        <section id="step-theme" class="space-y-6">
+            <div class="text-center space-y-3 py-6">
+                <h1 class="text-3xl font-extrabold tracking-tight">あなたの頭の中にある<span class="text-indigo-400">「熱量と体験」</span>を記事にする。</h1>
+                <p class="text-slate-400 text-sm max-w-lg mx-auto">
+                    単なるSEOのコピペ記事ではありません。ソクラテス式AIと壁打ちアプリ『イグニットインク』の対話エンジンが、あなたの生々しい本音を引き出し、体温の感じられる文章に昇華させます。
+                </p>
+            </div>
+
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl space-y-4">
+                <label class="block text-sm font-medium text-slate-300">いま、どんなテーマやモヤモヤについて書きたいですか？</label>
+                <textarea id="theme-input" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-slate-100 focus:outline-none focus:border-indigo-500 text-sm" placeholder="例：地方でのリモートワークのリアル、失敗から学んだエンジニアの教訓 など"></textarea>
+                <button onclick="startChat()" class="w-full bg-indigo-600 hover:bg-indigo-500 font-bold py-3 rounded-xl transition text-sm shadow-lg shadow-indigo-600/30">
+                    無料の壁打ちセッションを始める 🚀
+                </button>
+            </div>
+        </section>
+
+        <!-- ステップ2: ソクラテス式チャット対話画面 -->
+        <section id="step-chat" class="hidden space-y-4">
+            <div class="bg-indigo-950/40 border border-indigo-900/50 p-4 rounded-xl text-xs text-indigo-300 flex justify-between items-center">
+                <span>💬 ソクラテス式対話セッション中（イグニットインク・エンジン）</span>
+                <span id="chat-progress" class="font-bold">1 / 3 往復</span>
+            </div>
+
+            <div id="chat-container" class="bg-slate-800 border border-slate-700 rounded-2xl p-4 h-96 overflow-y-auto space-y-4 shadow-inner text-sm">
+                <!-- チャットメッセージがここに追加されます -->
+            </div>
+
+            <div class="flex gap-2">
+                <input type="text" id="user-reply" class="flex-grow bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500" placeholder="自分の言葉でラフに返信してみる..." onkeypress="if(event.key==='Enter') sendReply()">
+                <button onclick="sendReply()" class="bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-xl font-bold text-sm transition">送信</button>
+            </div>
+        </section>
+
+        <!-- ステップ3: インサイト分析 ＆ 都度課金プラン選択 -->
+        <section id="step-pricing" class="hidden space-y-6">
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl space-y-4 text-center">
+                <div class="inline-block bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-3 py-1 rounded-full font-bold">
+                    ✨ 一次情報の抽出・言語化に成功しました！
+                </div>
+                <h2 class="text-xl font-bold">あなたの対話から見つかった「独自の視点」</h2>
+                <p id="insight-summary" class="text-sm text-slate-300 bg-slate-900 p-4 rounded-xl text-left border border-slate-800"></p>
+                
+                <div class="border-t border-slate-700 pt-6 text-left space-y-4">
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">文字数コースを選択して記事を生成</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div onclick="selectPlan('light')" id="plan-light" class="border border-slate-700 bg-slate-900 p-4 rounded-xl cursor-pointer hover:border-indigo-500 transition">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-bold text-sm">ライトコース</span>
+                                <span class="text-indigo-400 font-bold">980円</span>
+                            </div>
+                            <p class="text-xs text-slate-400">4,000文字以内 / SNS発信・コラム向け</p>
+                        </div>
+                        <div onclick="selectPlan('deep')" id="plan-deep" class="border-2 border-indigo-500 bg-indigo-950/20 p-4 rounded-xl cursor-pointer shadow-lg">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-bold text-sm text-indigo-300">ディープコース（おすすめ）</span>
+                                <span class="text-indigo-400 font-bold">1,980円</span>
+                            </div>
+                            <p class="text-xs text-slate-400">4,000文字以上 / 本格的なSEO・オウンドメディア向け</p>
+                        </div>
+                    </div>
+
+                    <button onclick="checkoutAndGenerate()" class="w-full bg-emerald-600 hover:bg-emerald-500 font-bold py-3.5 rounded-xl transition text-sm shadow-lg shadow-emerald-600/30">
+                        決済して「自分の言葉」で記事を生成する 🪄
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ステップ4: 完成記事 ＆ PRエリア -->
+        <section id="step-result" class="hidden space-y-6">
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl space-y-6">
+                <div class="flex justify-between items-center border-b border-slate-700 pb-4">
+                    <h2 class="text-lg font-bold text-indigo-400">📄 完成した人間らしい記事</h2>
+                    <span id="result-meta" class="text-xs bg-slate-700 px-2.5 py-1 rounded text-slate-300"></span>
+                </div>
+
+                <div id="article-content" class="text-sm leading-relaxed space-y-4 text-slate-200 bg-slate-900 p-6 rounded-xl border border-slate-800 whitespace-pre-wrap"></div>
+
+                <div class="flex gap-3">
+                    <button onclick="alert('クリップボードにコピーしました！')" class="flex-grow bg-slate-700 hover:bg-slate-600 py-3 rounded-xl text-sm font-bold transition">文章をコピーする</button>
+                    <button onclick="resetApp()" class="bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-xl text-sm font-bold transition">新しい記事を作る</button>
+                </div>
+            </div>
+
+            <!-- PR導線エリア：イグニットインクへのクロスプロモーション -->
+            <div class="bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-700/50 rounded-2xl p-6 text-center space-y-3">
+                <h3 class="font-bold text-base">この「思考の壁打ち」をもっと日常に。</h3>
+                <p class="text-xs text-slate-300 max-w-md mx-auto">
+                    今回体験したソクラテス式対話エンジンを搭載した元祖・壁打ちアプリ『イグニットインク』では、日々のアイデア出しやキャリアの悩みを深く掘り下げることができます。
+                </p>
+                <a href="#" onclick="alert('『イグニットインク』の公式サイトへ移動します（モック）'); return false;" class="inline-block bg-white text-indigo-950 font-bold px-6 py-2.5 rounded-xl text-xs hover:bg-slate-200 transition">
+                    『イグニットインク』を試してみる（無料） 🔥
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- フッター -->
+    <footer class="text-center py-6 text-xs text-slate-500 border-t border-slate-800 mt-auto">
+        &copy; 2026 Socratic Writer & Ignite Ink Project. All rights reserved.
+    </footer>
+
+    <!-- JavaScriptロジック -->
+    <script>
+        let currentTheme = "";
+        let chatStep = 0;
+        let selectedPlanType = "deep";
+        let userResponses = [];
+
+        function startChat() {
+            const input = document.getElementById("theme-input").value.trim();
+            if (!input) {
+                alert("テーマを入力してください！");
+                return;
+            }
+            currentTheme = input;
+            document.getElementById("step-theme").classList.add("hidden");
+            document.getElementById("step-chat").classList.remove("hidden");
+
+            addMessage("ai", `こんにちは！「${currentTheme}」ですね。非常に面白そうなテーマです。<br>まず教えてください。あなたがそのテーマについて、一番「世間の一般論とは違うんだけど、自分はこう実感している」と感じているポイントは何ですか？`);
+        }
+
+        function addMessage(sender, text) {
+            const container = document.getElementById("chat-container");
+            const div = document.createElement("div");
+            div.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'} mb-3`;
+            div.innerHTML = `
+                <div class="max-w-[85%] rounded-2xl px-4 py-3 text-xs leading-relaxed ${sender === 'user' ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-slate-700 text-slate-200 rounded-bl-none'}">
+                    ${text}
+                </div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendReply() {
+            const inputEl = document.getElementById("user-reply");
+            const reply = inputEl.value.trim();
+            if (!reply) return;
+
+            addMessage("user", reply);
+            userResponses.push(reply);
+            inputEl.value = "";
+            chatStep++;
+
+            document.getElementById("chat-progress").innerText = `${Math.min(chatStep + 1, 3)} / 3 往復`;
+
+            setTimeout(() => {
+                if (chatStep === 1) {
+                    addMessage("ai", "なるほど、そこに苦労されたんですね。ちなみに、その時に一番焦った具体的なエピソードを一つだけ挙げるとしたら、どんな場面でしたか？");
+                } else if (chatStep === 2) {
+                    addMessage("ai", "ありがとうございます。その経験を通じて、今だからこそ他の人に伝えたい「一番大切なしみじみとした教訓」は何ですか？");
+                } else {
+                    // チャット完了 -> プラン選択画面へ
+                    document.getElementById("step-chat").classList.add("hidden");
+                    document.getElementById("step-pricing").classList.remove("hidden");
+                    
+                    document.getElementById("insight-summary").innerHTML = `
+                        <b>【抽出された一次情報・熱量】</b><br>
+                        ・テーマ: ${currentTheme}<br>
+                        ・ユーザー独自の実感: ${userResponses[0] || '特になし'}<br>
+                        ・生々しいエピソード: ${userResponses[1] || '特になし'}<br>
+                        ・導き出された教訓: ${userResponses[2] || '特になし'}
+                    `;
+                }
+            }, 800);
+        }
+
+        function selectPlan(type) {
+            selectedPlanType = type;
+            if (type === 'light') {
+                document.getElementById('plan-light').className = "border-2 border-indigo-500 bg-indigo-950/20 p-4 rounded-xl cursor-pointer shadow-lg";
+                document.getElementById('plan-deep').className = "border border-slate-700 bg-slate-900 p-4 rounded-xl cursor-pointer hover:border-indigo-500 transition";
+            } else {
+                document.getElementById('plan-deep').className = "border-2 border-indigo-500 bg-indigo-950/20 p-4 rounded-xl cursor-pointer shadow-lg";
+                document.getElementById('plan-light').className = "border border-slate-700 bg-slate-900 p-4 rounded-xl cursor-pointer hover:border-indigo-500 transition";
+            }
+        }
+
+        function checkoutAndGenerate() {
+            document.getElementById("step-pricing").classList.add("hidden");
+            document.getElementById("step-result").classList.remove("hidden");
+
+            const isDeep = selectedPlanType === 'deep';
+            document.getElementById("result-meta").innerText = isDeep ? "ディープコース（4000文字以上相当・SEO最適化）" : "ライトコース（4000文字以内・コラム版）";
+
+            // 人間らしい生々しいトーンの記事をシミュレート生成
+            document.getElementById("article-content").innerText = 
+`【タイトル】${currentTheme}の裏側で、私が身をもって痛感した本当の話
+
+世間ではよく「こうすればうまくいく」という綺麗事がまかり通っている。だけど、実際に現場の泥水をすすってきた人間から言わせてもらうと、現実はそんなに甘くない。
+
+私が直面したのは、まさにそのギャップだった。
+${userResponses[0] ? `特に痛感したのは「${userResponses[0]}」という現実だ。` : ''}
+
+当時を振り返ると、本当に冷や汗が出る瞬間があった。
+${userResponses[1] ? `一番焦ったのは、${userResponses[1]}。あのときの焦燥感は今でも忘れられない。` : ''}
+
+誰もが最初は失敗する。しかし、そこから逃げ出さずに何を持ち帰るかが分かれ道だった。
+${userResponses[2] ? `だからこそ伝えたい。${userResponses[2]}――これが、私のたどり着いた答えだ。` : ''}
+
+綺麗事のノウハウを並べるだけの記事なんて、もう誰も求めていない。自分の頭で考え、泥臭く対話を重ねたからこそ見えてくる景色が、ここにある。`;
+        }
+
+        function resetApp() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
